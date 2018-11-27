@@ -1,0 +1,100 @@
+<ion-content class="background">
+  <ion-grid>
+
+    <div class="login-container">
+      <ion-row class="flexRowCenter">
+        <img class="login-logo" src="assets/imgs/LOGO_UMNG.png" style="height: 40%; width: 40%;">
+      </ion-row>
+
+      <ion-row>
+        <ion-segment color="white" [(ngModel)]="option">
+          <ion-segment-button value="login">Login</ion-segment-button>
+          <ion-segment-button value="register">Registro</ion-segment-button>
+        </ion-segment>
+      </ion-row>
+
+      <!-- +++++++++++++++++++++++++++++++++++++++++
+          Formulario de login 
+          ++++++++++++++++++++++++++++++++++++++++++ -->
+      <div [ngSwitch]="option">
+        <div *ngSwitchCase="'login'">
+          <form [formGroup]="formLogin" (ngSubmit)="login()">
+            <ion-row>
+              <ion-item class="input-block">
+                <ion-label color="white" floating>E-mail</ion-label>
+                <ion-input type="email" formControlName="email"></ion-input>
+              </ion-item>
+              <ion-item class="input-block">
+                <ion-label color="white" floating>Contraseña</ion-label>
+                <ion-input type="password" formControlName="password"></ion-input>
+              </ion-item>
+            </ion-row>
+
+            <ion-row class="flexRowCenter">
+              <a class="forgot-password-button" (tap)="forgotPassword()" href="#">restablecer contraseña</a>
+            </ion-row>
+
+            <ion-row>
+              <button [disabled]="!formLogin.valid" color="light" ion-button block class="btn-gray">Continue</button>
+            </ion-row>
+          </form>
+        </div>
+
+
+        <!-- +++++++++++++++++++++++++++++++++++++++++
+Formulario de registro
+++++++++++++++++++++++++++++++++++++++++++ -->
+        <div *ngSwitchCase="'register'">
+          <form [formGroup]="formRegistration" (ngSubmit)="registration()">
+            <ion-row>
+              <ion-item class="input-block">
+                <ion-label color="white" floating>Name</ion-label>
+                <ion-input formControlName="name"></ion-input>
+              </ion-item>
+
+              <ion-item class="input-block">
+                <ion-label color="white" floating>Last Name</ion-label>
+                <ion-input formControlName="lastname"></ion-input>
+              </ion-item>
+
+              <ion-item class="input-block">
+                <ion-label color="white" floating>E-mail</ion-label>
+                <ion-input type="email" formControlName="email"></ion-input>
+              </ion-item>
+
+              <ion-item class="input-block">
+                <ion-label color="white" floating>Password</ion-label>
+                <ion-input type="password" formControlName="password"></ion-input>
+              </ion-item>
+
+              <ion-list>
+                <ion-item class="selecItem">
+                  <ion-label>Tipo de usuario</ion-label>
+                  <ion-select formControlName="rol">
+                    <ion-option value="paciente">Paciente</ion-option>
+                    <ion-option value="medico">Médico</ion-option>
+                    <ion-option value="ambulancia">Ambulancia</ion-option>
+                    <ion-option value="familiar">Familiar</ion-option>
+                  </ion-select>
+                </ion-item>
+              </ion-list>
+
+              <ion-item class="termns-item">
+                <ion-label>
+                  <span class="termns">Aceptar terminos y condiciones </span>
+                </ion-label>
+                <ion-checkbox formControlName="terms"></ion-checkbox>
+              </ion-item>
+            </ion-row>
+
+            <ion-row>
+              <button [disabled]="!formRegistration.valid" type="submit" color="light" ion-button block class="btn-gray">Register</button>
+            </ion-row>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+  </ion-grid>
+</ion-content>

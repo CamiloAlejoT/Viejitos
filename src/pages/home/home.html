@@ -1,14 +1,62 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Ionic Blank
+      Proyecto
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
+  Device motion
   <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
+    Inicio de la calibración V1.0
   </p>
+
+
+
+
+
+
+  <ion-slides pager style="height: 80%;">
+
+    <ion-slide>
+      <strong>
+        Reposo:
+      </strong>
+      <span>
+        {{segs}} S
+      </span>
+      <br>
+      <button full class="footerBtn" ion-button *ngIf="segs>0" (click)="startRep()">Iniciar</button>
+      <!-- <button full class="footerBtn" ion-button *ngIf="segs==0" (click)="nextSlide()">Siguiente</button> -->
+
+
+    </ion-slide>
+
+    <ion-slide>
+      <button full class="footerBtn" ion-button (click)="startCaida()">Iniciar Caida</button>
+      
+    </ion-slide>
+
+    <ion-slide style="background-color: red">
+      <h2>Slide 3</h2>
+    </ion-slide>
+
+    <ion-slide style="background-color: red">
+      <h2>Slide 3</h2>
+    </ion-slide>
+
+    <ion-slide style="background-color: red">
+      <h2>Slide 3</h2>
+    </ion-slide>
+
+  </ion-slides>
+
+  <!-- <strong>x: </strong> <span> {{x}}</span> <br>
+  <strong>y: </strong> <span> {{y}}</span> <br>
+  <strong>z: </strong> <span> {{z}}</span> <br>
+
+  <button (click)="startConf()">
+    Start
+  </button> -->
 </ion-content>
