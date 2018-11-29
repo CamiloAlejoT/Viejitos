@@ -44,8 +44,8 @@ import { ComunProvider } from '../providers/comun/comun';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ComunProvider,
-    // Gyroscope,
-    // DeviceMotion
+    Gyroscope,
+    DeviceMotion
   ]
 })
 export class AppModule {}

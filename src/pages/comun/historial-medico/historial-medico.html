@@ -1,18 +1,282 @@
-<!--
-  Generated template for the HistorialMedicoPage page.
+<div class="fomContainer">
+  <div class="principalHead" (click)="showinfo()">
+    Historial médico
+  </div>
+  <!-- +++++++++++++++++++++++++++++++++++++++++
+	Formulario de registro
+	++++++++++++++++++++++++++++++++++++++++++ -->
+  <form [formGroup]="formMedic" (ngSubmit)="onSubmit()">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-1></ion-col>
+        <ion-col col-10 class="formContent">
 
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<ion-header>
+          <!-- +++++++++++++++++++++++++++++++++++++++++
+					Seccion de informacon personal
+					++++++++++++++++++++++++++++++++++++++++++ -->
+          <div class="subTitulo">
+            Información personal
+          </div>
+          <!-- nombre -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Nombre</ion-label>
+            <ion-input required formControlName="name" type="text"></ion-input>
+          </ion-item>
 
-  <ion-navbar>
-    <ion-title>historialMedico</ion-title>
-  </ion-navbar>
+          <!-- apellido -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Apellido</ion-label>
+            <ion-input required formControlName="lastName" type="text"></ion-input>
+          </ion-item>
 
-</ion-header>
+          <!-- E-mail -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>E-mail</ion-label>
+            <ion-input required formControlName="E-mail" type="email"></ion-input>
+          </ion-item>
+
+          <!-- tipo de documento -->
+          <ion-list class="inputStyle listStyle">
+            <ion-item class="selecItem">
+              <ion-label>Tipo de identificacion</ion-label>
+              <ion-select formControlName="tipoDoc">
+                <ion-option value="Hombre">Tarjeta de indentidad</ion-option>
+                <ion-option value="Mujer">C.C</ion-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+
+          <!-- E-mail -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>No de documento</ion-label>
+            <ion-input required formControlName="documento" type="number"></ion-input>
+          </ion-item>
+
+          <!-- genero -->
+          <ion-list class="inputStyle listStyle">
+            <ion-item class="selecItem">
+              <ion-label>Genero</ion-label>
+              <ion-select formControlName="genero">
+                <ion-option value="Hombre">Hombre</ion-option>
+                <ion-option value="Mujer">Mujer</ion-option>
+                <ion-option value="Otro">Otro</ion-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+
+          <!-- Edad -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Edad</ion-label>
+            <ion-input required formControlName="edad" type="number"></ion-input>
+          </ion-item>
+
+          <!-- numero fijo -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Número fijo</ion-label>
+            <ion-input required formControlName="numFijo" type="number"></ion-input>
+          </ion-item>
+
+          <!-- numero celular -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Número celular</ion-label>
+            <ion-input required formControlName="numCelular" type="number"></ion-input>
+          </ion-item>
+
+          <!-- nombre Familiar -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Nombre Familiar</ion-label>
+            <ion-input required formControlName="nombreFamiliar" type="text"></ion-input>
+          </ion-item>
+
+          <!-- numero Familiar -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Número Familiar</ion-label>
+            <ion-input required formControlName="numFamiliar" type="number"></ion-input>
+          </ion-item>
 
 
-<ion-content padding>
+          <!-- nombre médico -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Nombre médico</ion-label>
+            <ion-input required formControlName="nombreMedico" type="text"></ion-input>
+          </ion-item>
 
-</ion-content>
+          <!-- numero Médico -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Número Médico</ion-label>
+            <ion-input required formControlName="numMedico" type="number"></ion-input>
+          </ion-item>
+
+          <!-- grupo sanguineo -->
+          <ion-list class="inputStyle listStyle">
+            <ion-item class="selecItem">
+              <ion-label>Grupo sanguineo</ion-label>
+              <ion-select formControlName="grupoSanguineo">
+                <ion-option value="a">A</ion-option>
+                <ion-option value="b">B</ion-option>
+                <ion-option value="ab">AB</ion-option>
+                <ion-option value="o">O</ion-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+
+          <!-- RH -->
+          <ion-list class="inputStyle listStyle">
+            <ion-item class="selecItem">
+              <ion-label>RH</ion-label>
+              <ion-select formControlName="rh">
+                <ion-option value="+">( + ) Positivo</ion-option>
+                <ion-option value="-">( - ) Negativo</ion-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+
+          <!-- Ocupacion -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Ocupación</ion-label>
+            <ion-input required formControlName="ocupacion" type="text"></ion-input>
+          </ion-item>
+
+
+
+          <!-- +++++++++++++++++++++++++++++++++++++++++
+					Antecendentes familiares
+					++++++++++++++++++++++++++++++++++++++++++ -->
+          <div class="subTitulo">
+            Antecedentes Familiares
+          </div>
+
+          <!-- cancer -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Cancer</ion-label>
+            <ion-input required formControlName="cancer" type="text"></ion-input>
+          </ion-item>
+
+          <!-- enfermedades cardiacas -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Enfermedades Cardiacas</ion-label>
+            <ion-input required formControlName="enferCardiacas" type="text"></ion-input>
+          </ion-item>
+
+          <!-- Hipertencion -->
+          <ion-item>
+            <ion-label>Hipertención</ion-label>
+            <ion-checkbox formControlName="hipertencion"></ion-checkbox>
+          </ion-item>
+
+          <!-- diabetes -->
+          <ion-item>
+            <ion-label>Diabetes</ion-label>
+            <ion-checkbox formControlName="diabetesFam"></ion-checkbox>
+          </ion-item>
+
+          <!-- Otros -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Comentarios</ion-label>
+            <ion-input required formControlName="otrosFam" type="text"></ion-input>
+          </ion-item>
+
+
+          <!-- +++++++++++++++++++++++++++++++++++++++++
+					Antedecentes Medicos 
+					++++++++++++++++++++++++++++++++++++++++++ -->
+          <div class="subTitulo">
+            Antecedentes Médicos
+          </div>
+
+          <!-- Precino arterial -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Presión arterial</ion-label>
+            <ion-input required formControlName="presionArterial" type="text"></ion-input>
+          </ion-item>
+
+          <!-- cirugias -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Ciruguas</ion-label>
+            <ion-input required formControlName="cirugias" type="text"></ion-input>
+          </ion-item>
+
+          <!-- alergias -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Alergias</ion-label>
+            <ion-input required formControlName="alergias" type="text"></ion-input>
+          </ion-item>
+
+          <!-- diabetes -->
+          <ion-item>
+            <ion-label>Diabetes</ion-label>
+            <ion-checkbox formControlName="diabetesMed"></ion-checkbox>
+          </ion-item>
+
+          <!-- Otros -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Otros</ion-label>
+            <ion-input required formControlName="otrosMed" type="text"></ion-input>
+          </ion-item>
+
+
+          <!-- +++++++++++++++++++++++++++++++++++++++++
+					Exploracion fisica
+					++++++++++++++++++++++++++++++++++++++++++ -->
+          <div class="subTitulo">
+            Exploración fisica
+          </div>
+          <!-- peso -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Peso</ion-label>
+            <ion-input required formControlName="peso" type="number"></ion-input>
+          </ion-item>
+
+          <!-- Talla -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Talla</ion-label>
+            <ion-input required formControlName="talla" type="number"></ion-input>
+          </ion-item>
+
+          <!-- IMC -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Indice de masa corporal</ion-label>
+            <ion-input required formControlName="imc" type="number"></ion-input>
+          </ion-item>
+
+          <!-- temperatura -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Temperatura</ion-label>
+            <ion-input required formControlName="temperatura" type="number"></ion-input>
+          </ion-item>
+
+          <!-- frecuencia cardiaca -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Frecuencia Cardiaca</ion-label>
+            <ion-input required formControlName="freCardiaca" type="number"></ion-input>
+          </ion-item>
+
+          <!-- Frecuencia respiratoria -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Frecuencia respiratoria</ion-label>
+            <ion-input required formControlName="frecRespiratoria" type="number"></ion-input>
+          </ion-item>
+
+
+          <!-- +++++++++++++++++++++++++++++++++++++++++
+          medicamentos
+          ++++++++++++++++++++++++++++++++++++++++++ -->
+          <div class="subTitulo">
+            Medicamentos
+          </div>
+          <!-- peso -->
+          <ion-item class=" inputStyle">
+            <ion-label floating>Toma algun medicamentos</ion-label>
+            <ion-input required formControlName="medicamentos" type="text"></ion-input>
+          </ion-item>
+
+
+        </ion-col>
+        <ion-col col-1></ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <button class="btnSave" color="light" [disabled]="!formMedic.valid" ion-button type="submit" >Guardar</button>
+  </form>
+
+</div>

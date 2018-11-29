@@ -13,6 +13,7 @@ import * as firebase from 'firebase'
 // Providers
 // -----------------------------------------------------------------
 import { ComunProvider, iUser } from "../../../providers/comun/comun";
+import { HomePage } from '../../home/home';
 
 
 
@@ -100,17 +101,26 @@ export class LoginPage {
     const loader = this.comun.showLoading('Iniciando Sesión')
     loader.present()
 
-    let user = await this.comun.loginFirebase(this.formLogin.value['email'], this.formLogin.value['password'])
-    // .then(user => {
-    if (user) {
-      loader.dismiss()
-      let infoUser = await this.comun.loadUser(user.user.uid)
-      this.navCtrl.push(HistorialMedicoPage)
-    }
-    // }).catch(error => {
-    //   loader.dismiss()
-    //   this.comun.showAlert('Error', error)
-    // })<
+
+    this.comun.loginFirebase(this.formLogin.value['email'], this.formLogin.value['password'])
+      .then(user => {
+        if (user) {
+          
+          this.comun.loadUser(user.user.uid).then(temp => {
+            let u: iUser = temp
+            localStorage.setItem('uInfo' , JSON.stringify(u))
+            if (u.role === 'paciente') {
+              loader.dismiss()
+              if (u.antecedentesFam && u.antecedentesMed && u.infoGeneral && u.medicamentos) this.navCtrl.setRoot(HomePage)
+              else this.navCtrl.setRoot(HistorialMedicoPage)
+            }
+
+          })
+        }
+      }).catch(error => {
+        loader.dismiss()
+        this.comun.showAlert('Error', error)
+      })
   }
 
 
@@ -126,6 +136,8 @@ export class LoginPage {
           lastName: this.formRegistration.value['lastname'],
           name: this.formRegistration.value['name']
         }
+        this.comun.user =User
+        localStorage.setItem('uInfo' , JSON.stringify(User))
         firebase.database().ref('usuarios').child(resp.user.uid).set(User).then(() => {
           loader.dismiss()
           this.navCtrl.setRoot(HistorialMedicoPage)

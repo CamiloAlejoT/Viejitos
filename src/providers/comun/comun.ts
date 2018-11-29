@@ -5,7 +5,7 @@ import { LoadingController, AlertController } from 'ionic-angular';
 // Libraries
 // -----------------------------------------------------------------
 import * as firebase from 'firebase';
-
+import * as _ from 'lodash'
 
 @Injectable()
 export class ComunProvider {
@@ -84,21 +84,81 @@ export class ComunProvider {
   // -----------------------------------------------------------------
   // usuario
   // -----------------------------------------------------------------
-  async loadUser() {
-    if (this.user != undefined) {
-      if (this.user.key == undefined) {
-        // console.log('making the call for user information')
-        const response = await firebase.firestore().collection('user').doc(firebase.auth().currentUser.uid).get()
-        if (response) {
-          this.user = <iUser>response.data()
-        }
-        return this.user
+  async loadUser(key: string): Promise<any> {
+    return new Promise((user) => {
+      let temp = _.isEmpty(this.user)
+      if (temp) {
+        firebase.database().ref('usuarios').child(key).once('value', data => {
+          let u: iUser = data.val()
+          this.user = u
+          return user(this.user)
+        })
       } else {
-        return this.user
+        return user(this.user)
       }
-    } else {
-      this.user = <iUser>{}
+    })
+  }
+
+  async saveUserbyFirsTime(userInfo): Promise<any> {
+    this.user.exploracionFisica = {
+      peso: userInfo['peso'],
+      talla: userInfo['talla'],
+      imc: userInfo['imc'],
+      temperatura: userInfo['temperatura'],
+      freCardiaca: userInfo['freCardiaca'],
+      frecRespiratoria: userInfo['frecRespiratoria']
     }
+
+    this.user.antecedentesMed = {
+      presionArterial: userInfo['presionArterial'],
+      diabetes: userInfo['diabetesMed'],
+      alergias: userInfo['alergias'],
+      cirugias: userInfo['cirugias'],
+      otros: userInfo['otrosMed']
+    }
+
+    this.user.antecedentesFam = {
+      cancer: userInfo['cancer'],
+      hipertencion: userInfo['hipertencion'],
+      enferCardiacas: userInfo['enferCardiacas'],
+      diabetes: userInfo['diabetesFam'],
+      otros: userInfo['otrosFam']
+    }
+
+    this.user.infoGeneral = {
+      genero: userInfo['genero'],
+      edad: userInfo['edad'],
+      numFijo: userInfo['numFijo'],
+      numCelular: userInfo['numCelular'],
+      nombreFamiliar: userInfo['nombreFamiliar'],
+      numFamiliar: userInfo['numFamiliar'],
+      numMedico: userInfo['numMedico'],
+      nombreMedico: userInfo['nombreMedico'],
+      grupoSanguineo: userInfo['grupoSanguineo'],
+      rh: userInfo['rh'],
+      ocupacion: userInfo['ocupacion'],
+      tipoDoc: userInfo['tipoDoc'],
+      doc: userInfo['documento'],
+      fechaReg: new Date().getTime(),
+      ubicacion: ''
+    }
+
+    this.user.medicamentos = userInfo['medicamentos']
+
+    return new Promise((ok, err) => {
+      firebase.database().ref('usuarios').child(this.user.key).update(this.user).then(() => {
+        ok('ok')
+      }).catch(() => {
+        err('error')
+      })
+    })
+
+
+
+    
+
+
+
   }
 
 
@@ -113,7 +173,17 @@ export interface iUser {
   infoGeneral?: infoGeneral
   antecedentesMed?: antecedentesMed
   antecedentesFam?: antecedentesFam
+  exploracionFisica?: exploracionFisica
   medicamentos?: string
+}
+
+export interface exploracionFisica {
+  peso: number
+  talla: number
+  imc: number
+  temperatura: number
+  freCardiaca: number
+  frecRespiratoria: number
 }
 
 export interface antecedentesFam {
@@ -132,6 +202,9 @@ export interface antecedentesMed {
 }
 
 export interface infoGeneral {
+  tipoDoc: string
+  doc: number
+  fechaReg: number
   genero: string
   edad: number
   numFijo: number
@@ -144,5 +217,4 @@ export interface infoGeneral {
   rh: string
   ocupacion: string
   ubicacion: string
-
 }
