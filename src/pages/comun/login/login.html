@@ -48,14 +48,19 @@ Formulario de registro
           <form [formGroup]="formRegistration" (ngSubmit)="registration()">
             <ion-row>
               <ion-item class="input-block">
-                <ion-label color="white" floating>Name</ion-label>
+                <ion-label color="white" floating>Nombre</ion-label>
                 <ion-input formControlName="name"></ion-input>
               </ion-item>
 
               <ion-item class="input-block">
-                <ion-label color="white" floating>Last Name</ion-label>
+                <ion-label color="white" floating>Apellido</ion-label>
                 <ion-input formControlName="lastname"></ion-input>
               </ion-item>
+
+              <ion-item class="input-block">
+                  <ion-label color="white" floating>Número celular</ion-label>
+                  <ion-input formControlName="numCelular"></ion-input>
+                </ion-item>
 
               <ion-item class="input-block">
                 <ion-label color="white" floating>E-mail</ion-label>

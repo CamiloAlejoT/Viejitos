@@ -6,6 +6,7 @@ import { LoadingController, AlertController } from 'ionic-angular';
 // -----------------------------------------------------------------
 import * as firebase from 'firebase';
 import * as _ from 'lodash'
+import { OneSignal } from '@ionic-native/onesignal';
 
 @Injectable()
 export class ComunProvider {
@@ -15,12 +16,17 @@ export class ComunProvider {
   // Attributes
   // -----------------------------------------------------------------
   user = {} as iUser
+
+  initToken: string = ''
+
+  idPaciente: string
   // -----------------------------------------------------------------
   // Constructor
   // -----------------------------------------------------------------
   constructor(
     public loadingCtrl: LoadingController,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    private oneSignal: OneSignal
   ) {
     console.log('Hello ComunProvider Provider');
   }
@@ -129,7 +135,6 @@ export class ComunProvider {
       genero: userInfo['genero'],
       edad: userInfo['edad'],
       numFijo: userInfo['numFijo'],
-      numCelular: userInfo['numCelular'],
       nombreFamiliar: userInfo['nombreFamiliar'],
       numFamiliar: userInfo['numFamiliar'],
       numMedico: userInfo['numMedico'],
@@ -152,13 +157,69 @@ export class ComunProvider {
         err('error')
       })
     })
+  }
 
 
+  // -----------------------------------------------------------------
+  // one Signal start
+  // -----------------------------------------------------------------
+  oneSognalInit(): Promise<any> {
+    return new Promise((result) => {
+      this.oneSignal.startInit('b8582ab1-a1dc-4747-90d1-2e5c922c00b0', '175526358336')
+      this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.InAppAlert);
 
-    
+      this.oneSignal.handleNotificationReceived().subscribe((data) => {
+        console.log('display notification recivida');
+      });
 
+      this.oneSignal.handleNotificationOpened().subscribe((data) => {
+        this.idPaciente = data.notification.payload.body.split(" ").splice(-1)[0]
+        console.log(this.idPaciente);
+        firebase.database().ref('usuarios').child(this.idPaciente).once('value', data =>{
+          this.user = data.val()
+        })
+        
+      });
+      this.oneSignal.endInit();
+      result()
+    })
+  }
 
+  oneSignalToken() {
+    this.oneSignal.getIds().then(data => {
+      this.initToken = data.userId
+    })
+  }
 
+  sendPush(title, message, tokens) {
+    let temp
+    if (typeof tokens == "string") temp = [tokens]
+    else temp = tokens
+
+    this.oneSignal.postNotification({
+      isAppInFocus: true,
+      shown: true,
+
+      payload: {
+        notificationID: 'b8582ab1-a1dc-4747-90d1-2e5c922c00b0',
+        title: title,
+        body: message,
+        sound: "",
+        actionButtons: [],
+        rawPayload: "",
+      },
+      displayType: this.oneSignal.OSInFocusDisplayOption.Notification,
+      contents: { en: message },
+      headings: { en: title },
+      include_player_ids: temp
+    }).then(
+      info => {
+        console.log(info)
+      },
+      err => {
+        console.log(err)
+      }
+    )
   }
 
 
@@ -166,10 +227,12 @@ export class ComunProvider {
 
 export interface iUser {
   key: string
+  token: string
   name: string
   lastName: string
   role: string
   email: string
+  numCelular: number
   infoGeneral?: infoGeneral
   antecedentesMed?: antecedentesMed
   antecedentesFam?: antecedentesFam
@@ -208,7 +271,6 @@ export interface infoGeneral {
   genero: string
   edad: number
   numFijo: number
-  numCelular: number
   numFamiliar: number
   nombreFamiliar: string
   numMedico: number

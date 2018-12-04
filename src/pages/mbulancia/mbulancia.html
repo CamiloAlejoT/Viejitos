@@ -1,0 +1,32 @@
+<ion-content class="background">
+
+  <div *ngIf="comun.user.infoGeneral">
+    <strong>nombre:</strong>
+    <span> {{comun.user.name}}</span>
+    <br>
+    <strong>genero:</strong>
+    <span> {{comun.user.infoGeneral.genero}}</span>
+    <br>
+    <strong>edad:</strong>
+    <span> {{comun.user.infoGeneral.edad}}</span>
+    <br>
+    <strong>fijo:</strong>
+    <span> {{comun.user.infoGeneral.numFijo}}</span>
+    <br>
+    <strong>celular:</strong>
+    <span> {{comun.user.numCelular}}</span>
+    <br>
+    <strong>nombrePariente:</strong>
+    <span> {{comun.user.infoGeneral.nombreFamiliar}}</span>
+    <br>
+    <strong>celPariente:</strong>
+    <span> {{comun.user.infoGeneral.numFamiliar}}</span>
+    <br>
+    <strong>nombreMedico:</strong>
+    <span> {{comun.user.infoGeneral.nombreMedico}}</span>
+    <br>
+    <strong>celMedico:</strong>
+    <span> {{comun.user.infoGeneral.numMedico}}</span>
+  </div>
+
+</ion-content>

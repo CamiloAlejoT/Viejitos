@@ -1,5 +1,5 @@
 <div class="fomContainer">
-  <div class="principalHead" (click)="showinfo()">
+  <div class="principalHead">
     Historial médico
   </div>
   <!-- +++++++++++++++++++++++++++++++++++++++++
@@ -34,6 +34,12 @@
             <ion-label floating>E-mail</ion-label>
             <ion-input required formControlName="E-mail" type="email"></ion-input>
           </ion-item>
+
+             <!-- numero celular -->
+             <ion-item class=" inputStyle">
+                <ion-label floating>Número celular</ion-label>
+                <ion-input required formControlName="numCelular" type="number"></ion-input>
+              </ion-item>
 
           <!-- tipo de documento -->
           <ion-list class="inputStyle listStyle">
@@ -74,12 +80,6 @@
           <ion-item class=" inputStyle">
             <ion-label floating>Número fijo</ion-label>
             <ion-input required formControlName="numFijo" type="number"></ion-input>
-          </ion-item>
-
-          <!-- numero celular -->
-          <ion-item class=" inputStyle">
-            <ion-label floating>Número celular</ion-label>
-            <ion-input required formControlName="numCelular" type="number"></ion-input>
           </ion-item>
 
           <!-- nombre Familiar -->
@@ -276,7 +276,7 @@
       </ion-row>
     </ion-grid>
 
-    <button class="btnSave" color="light" [disabled]="!formMedic.valid" ion-button type="submit" >Guardar</button>
+    <button class="btnSave" color="light" [disabled]="!formMedic.valid" *ngIf="!comun.idPaciente" ion-button type="submit" >Guardar</button>
   </form>
 
 </div>

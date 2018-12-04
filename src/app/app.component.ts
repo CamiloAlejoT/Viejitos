@@ -17,10 +17,11 @@ import { ComunProvider, iUser } from "../providers/comun/comun";
 // -----------------------------------------------------------------
 // Pages
 // -----------------------------------------------------------------
-// import { HomePage } from '../pages/home/home';
 import { LoginPage } from "../pages/comun/login/login";
 import { HistorialMedicoPage } from '../pages/comun/historial-medico/historial-medico';
-import { HomePage } from '../pages/home/home';
+import { HomePage } from '../pages/paciente/home/home';
+import { MedicoHomePage } from '../pages/medico/medico-home/medico-home';
+import { MbulanciaPage } from '../pages/mbulancia/mbulancia';
 
 @Component({
   templateUrl: 'app.html'
@@ -36,15 +37,29 @@ export class MyApp {
   ) {
     platform.ready().then(() => {
       firebase.initializeApp(Env.environment.config)
+      comun.oneSognalInit().then(() => comun.oneSignalToken())
 
       let status = localStorage.getItem('uInfo')
       console.log('inicia');
       if (status) {
         let us: iUser = JSON.parse(status)
+        switch (us.role) {
+          case 'paciente':
+            this.rootPage = HistorialMedicoPage
+            break;
+          case 'medico':
+            this.rootPage = MedicoHomePage
+            break;
+          case 'ambulancia':
+          this.rootPage = MbulanciaPage
+            break;
+          case 'familiar':
+            break;
+        }
         if (us.role === 'paciente') {
           comun.user = us
           if (us.antecedentesFam && us.antecedentesMed && us.exploracionFisica && us.infoGeneral && us.medicamentos) {
-            this.rootPage = HomePage 
+            this.rootPage = HomePage
           } else this.rootPage = HistorialMedicoPage
 
         }

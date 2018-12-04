@@ -1,0 +1,20 @@
+page-medico-home {
+  .background {
+    background: linear-gradient(top, rgba(19, 40, 97, 1) 0%, rgba(246, 246, 246, 1) 49%, rgba(252, 197, 6, 1) 100%);
+  }
+
+  .emptySpace {
+    font-size: 30px;
+    color: white;
+    text-align: center;
+    margin-top: 5vh;
+    padding: 5vh;
+  }
+
+  .subtitle {
+    color: white;
+    font-size: 25px;
+    text-align: center;
+    margin: 20px 0px 30px;
+  }
+}

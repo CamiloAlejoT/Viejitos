@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators, AbstractControl, FormControlName } 
 // -----------------------------------------------------------------
 // Pages
 // -----------------------------------------------------------------
-import { HomePage } from "../../home/home";
+import { HomePage } from "../../paciente/home/home";
 
 
 // -----------------------------------------------------------------
@@ -47,12 +47,12 @@ export class HistorialMedicoPage {
         Validators.required,
         Validators.email
       ]),
+      'numCelular': new FormControl(this.user.numCelular, Validators.required),
 
       // información general
       'genero': new FormControl(this.user.infoGeneral ? this.user.infoGeneral.genero : null, Validators.required),
       'edad': new FormControl(this.user.infoGeneral ? this.user.infoGeneral.edad : null, [Validators.required]),
       'numFijo': new FormControl(this.user.infoGeneral ? this.user.infoGeneral.numFijo : null, Validators.required),
-      'numCelular': new FormControl(this.user.infoGeneral ? this.user.infoGeneral.numCelular : null, Validators.required),
       'nombreFamiliar': new FormControl(this.user.infoGeneral ? this.user.infoGeneral.nombreFamiliar : null, Validators.required),
       'numFamiliar': new FormControl(this.user.infoGeneral ? this.user.infoGeneral.numFamiliar : null, Validators.required),
       'numMedico': new FormControl(this.user.infoGeneral ? this.user.infoGeneral.numMedico : null, Validators.required),
@@ -99,6 +99,7 @@ export class HistorialMedicoPage {
   }
 
 
+  
   async onSubmit() {
     let loader = this.comun.showLoading('Guardando tu información...')
     loader.present()
@@ -111,12 +112,6 @@ export class HistorialMedicoPage {
       loader.dismiss()
       this.comun.showAlert('Error', 'Verifica tu información')
     })
-  }
-
-
-  showinfo() {
-    console.log(this.formMedic);
-
   }
 
 }

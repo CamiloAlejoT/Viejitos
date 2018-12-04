@@ -1,19 +1,24 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+
 // -----------------------------------------------------------------
 // Pages
 // -----------------------------------------------------------------
 import { HistorialMedicoPage } from "../historial-medico/historial-medico";
+import { MedicoHomePage } from '../../medico/medico-home/medico-home';
+import { HomePage } from '../../paciente/home/home';
+
 // -----------------------------------------------------------------
 // Libraries
 // -----------------------------------------------------------------
 import * as firebase from 'firebase'
+
 // -----------------------------------------------------------------
 // Providers
 // -----------------------------------------------------------------
 import { ComunProvider, iUser } from "../../../providers/comun/comun";
-import { HomePage } from '../../home/home';
+import { MbulanciaPage } from '../../mbulancia/mbulancia';
 
 
 
@@ -43,7 +48,8 @@ export class LoginPage {
     email: null,
     password: null,
     terms: false,
-    rol: 'paciente'
+    rol: 'paciente',
+    numCelular: null
   }
 
   // -----------------------------------------------------------------
@@ -85,7 +91,8 @@ export class LoginPage {
         Validators.required,
         Validators.requiredTrue
       ]),
-      'rol': new FormControl(this.registerForm['rol'], Validators.required)
+      'rol': new FormControl(this.registerForm['rol'], Validators.required),
+      'numCelular': new FormControl(this.registerForm['numCelular'])
     })
   }
 
@@ -100,21 +107,27 @@ export class LoginPage {
   async login() {
     const loader = this.comun.showLoading('Iniciando Sesión')
     loader.present()
-
-
     this.comun.loginFirebase(this.formLogin.value['email'], this.formLogin.value['password'])
       .then(user => {
         if (user) {
-          
           this.comun.loadUser(user.user.uid).then(temp => {
             let u: iUser = temp
-            localStorage.setItem('uInfo' , JSON.stringify(u))
-            if (u.role === 'paciente') {
-              loader.dismiss()
-              if (u.antecedentesFam && u.antecedentesMed && u.infoGeneral && u.medicamentos) this.navCtrl.setRoot(HomePage)
-              else this.navCtrl.setRoot(HistorialMedicoPage)
+            localStorage.setItem('uInfo', JSON.stringify(u))
+            loader.dismiss()
+            switch (u.role) {
+              case 'paciente':
+                if (u.antecedentesFam && u.antecedentesMed && u.infoGeneral && u.medicamentos) this.navCtrl.setRoot(HomePage)
+                else this.navCtrl.setRoot(HistorialMedicoPage)
+                break;
+              case 'medico':
+                this.navCtrl.setRoot(MedicoHomePage)
+                break;
+              case 'ambulancia':
+                this.navCtrl.setRoot(MbulanciaPage)
+                break;
+              case 'familiar':
+                break;
             }
-
           })
         }
       }).catch(error => {
@@ -124,26 +137,50 @@ export class LoginPage {
   }
 
 
-  registration() {
+  async registration() {
     let loader = this.comun.showLoading('Creando tu usuario')
     loader.present()
-    firebase.auth().createUserWithEmailAndPassword(this.formRegistration.value.email, this.formRegistration.value.password)
-      .then((resp) => {
-        let User: iUser = {
-          email: this.formRegistration.value['email'],
-          key: resp.user.uid,
-          role: this.formRegistration.value['rol'],
-          lastName: this.formRegistration.value['lastname'],
-          name: this.formRegistration.value['name']
-        }
-        this.comun.user =User
-        localStorage.setItem('uInfo' , JSON.stringify(User))
-        firebase.database().ref('usuarios').child(resp.user.uid).set(User).then(() => {
-          loader.dismiss()
-          this.navCtrl.setRoot(HistorialMedicoPage)
+    let resultComp = await this.verifyUser()
+    if (resultComp) {
+      firebase.auth().createUserWithEmailAndPassword(this.formRegistration.value.email, this.formRegistration.value.password)
+        .then((resp) => {
+          let User: iUser = {
+            email: this.formRegistration.value['email'],
+            key: resp.user.uid,
+            role: this.formRegistration.value['rol'],
+            lastName: this.formRegistration.value['lastname'],
+            name: this.formRegistration.value['name'],
+            token: this.comun.initToken,
+            numCelular: this.formRegistration.value['numCelular'],
+          }
 
+          this.comun.user = User
+          localStorage.setItem('uInfo', JSON.stringify(User))
+
+          firebase.database().ref('usuarios').child(resp.user.uid).set(User).then(() => {
+            firebase.database().ref('observer').child(resp.user.uid).set({
+              start: false
+            })
+            loader.dismiss()
+            switch (this.formRegistration.value['rol']) {
+              case 'paciente':
+                this.navCtrl.setRoot(HistorialMedicoPage)
+                break;
+              case 'medico':
+                this.navCtrl.setRoot(MedicoHomePage)
+                break;
+              case 'ambulancia':
+                this.navCtrl.setRoot(MbulanciaPage)
+                break;
+              case 'familiar':
+                break;
+            }
+          })
         })
-      })
+    } else {
+      loader.dismiss()
+      this.comun.showAlert('Error', 'El número ya se encuentra en uso')
+    }
   }
 
   forgotPassword() {
@@ -155,6 +192,12 @@ export class LoginPage {
       })
       :
       this.comun.showAlert('Error', 'Ingresa un correo para que te llegue un email de validación')
+  }
+
+  async verifyUser() {
+    let result = await firebase.database().ref('usuarios').orderByChild('numCelular').equalTo(this.formRegistration.value['numCelular']).once('value')
+    if (result.val()) return false
+    else return true
   }
 
 }
